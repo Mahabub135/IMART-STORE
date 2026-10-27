@@ -424,13 +424,15 @@ app.delete("/api/admin/products/:id", requireAdmin, async (req, res) => {
 });
 // Admin page: open by adding /admin to the website URL.
 // Both /admin and /admin/ serve the same login page; APIs remain protected by requireAdmin.
-app.get(["/admin", "/admin/"], (req, res) => {
-  res.set("Cache-Control", "no-store, max-age=0");
+app.get("/admin", (req, res) => {
+  res.set("Cache-Control", "no-store");
   res.set("X-Robots-Tag", "noindex, nofollow");
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
-app.get("*", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 
+app.get("*", (req, res) =>
+  res.sendFile(path.join(__dirname, "public", "index.html"))
+);
 const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV === "production" && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32 || process.env.SESSION_SECRET === "development-only-change-me")) {
   console.error("Startup blocked: set SESSION_SECRET to a random value of at least 32 characters in production.");
